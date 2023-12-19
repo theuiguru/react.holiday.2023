@@ -10,12 +10,26 @@ function ShowLess({ children }) {
     return setContentHeight(contentRef.current.scrollHeight);
   })
 
+  const handleResize = () => {
+    setContentHeight(contentRef.current.scrollHeight);
+    console.log(Date.now);
+  };
+
+  React.useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    }
+  });
+
   return (
     <div>
       <div ref={contentRef} style={{ overflow: 'hidden', maxHeight: expanded ? contentHeight : `100px`, transition: 'all .5s ease'}}>
         { children }
       </div>
-      <button onClick={() => { setExpanded(!expanded); }}>Show {expanded ? 'less' : 'more'}</button>
+      {contentHeight > 100 ? (
+        <button onClick={() => { setExpanded(!expanded); }}>Show {expanded ? 'less' : 'more'}</button>
+      ) : null}
     </div>
   )
 }
